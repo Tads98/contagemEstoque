@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addItemLista, addLista, atualizarItemLista, atualizarLista, removerItemLista, removerLista } from "../features/estoqueSlice";
+import { atualizarLista, addItemLista, atualizarItemLista, removerItemLista, removerLista } from "../features/estoqueSlice";
 import { View, Button, TextInput, Text } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-
-function CrudLista() {
+function AddItem() {
     const [listaNome, setListaNome] = useState('');
+    const [itemNome, setItemNome] = useState('');
     const [listaData, setListaData] = useState('');
     const [listaUnidade, setListaUnidade] = useState('');
-    const [itemNome, setItemNome] = useState('');
     const [codigoBarras, setcodigoBarras] = useState('');
     const [dataValidade, setdataValidade] = useState('');
     const [qtdEmbalagem, setqtdEmbalagem] = useState('');
@@ -19,57 +16,6 @@ function CrudLista() {
     const [itemEditId, setItemEditId] = useState(null);
     const listas = useSelector(state => state.estoque.listas);
     const dispatch = useDispatch();
-
-     
-     const salvarListasNoStorage = async (listas) => {
-        try {
-            console.log('Salvando listas no armazenamento:', listas);
-            await AsyncStorage.setItem('@listas', JSON.stringify(listas));
-            console.log('Listas salvas com sucesso.');
-        } catch (error) {
-            console.error('Erro ao salvar listas', error);
-        }
-    };
-
-    
-    const carregarListasDoStorage = async () => {
-        try {
-            const listasString = await AsyncStorage.getItem('@listas');
-            console.log('Listas carregadas do armazenamento bruto:', listasString);
-            const listas = listasString ? JSON.parse(listasString) : [];
-            console.log('Listas convertidas do armazenamento:', listas);
-            return listas;
-        } catch (error) {
-            console.error('Erro ao carregar listas:', error);
-            return [];
-        }
-    };
-
-    
-    const testAsyncStorage = async () => {
-        await AsyncStorage.setItem('@teste', 'Testando');
-        const result = await AsyncStorage.getItem('@teste');
-        console.log('Valor armazenado:', result); 
-    };
-    testAsyncStorage();
-
-    useEffect(() => {
-        if (listas.length > 0) {
-            salvarListasNoStorage(listas);
-        }
-    }, [listas]);
-
-    
-    useEffect(() => {
-        const fetchListas = async () => {
-            const listasStorage = await carregarListasDoStorage();
-            console.log('Listas carregadas do storage no fetch:', listasStorage);  
-            if (listasStorage.length > 0) {
-                listasStorage.forEach(lista => dispatch(addLista(lista))); 
-            }
-        };
-        fetchListas();
-    }, [dispatch]);
 
     return (
         <View>
@@ -89,7 +35,7 @@ function CrudLista() {
                 onChangeText={setListaUnidade}
             />
             <Button
-                title={editId ? "Atualizar lista" : "Adicionar Lista"}
+                title= "Atualizar lista"
                 onPress={() => {
                     if (listaNome.trim() && listaData.trim() && listaUnidade.trim()) {
                         if (editId) {
@@ -100,13 +46,6 @@ function CrudLista() {
                                 unidade: listaUnidade,
                             }));
                             setEditId(null);
-                        } else {
-                            dispatch(addLista({
-                                id: Date.now(),
-                                name: listaNome,
-                                data: listaData,
-                                unidade: listaUnidade,
-                            }));
                         }
                         setListaNome('');
                         setListaData('');
@@ -223,23 +162,26 @@ function CrudLista() {
                             />
                         </View>
                     ))}
+                                        
                     <Button
-                        title="Editar"
+                        title="Editar Lista"
                         onPress={() => {
                             setEditId(lista.id);
                             setListaNome(lista.name);
+                            setListaData(lista.data);
+                            setListaUnidade(lista.unidade);
                         }}
                     />
+                    
 
                     <Button
-                        title="Remover"
+                        title="Remover Lista"
                         onPress={() => dispatch(removerLista(lista.id))}
                     />
                 </View>
             ))}
         </View>
     );
-
 }
 
-export default CrudLista;
+export default AddItem;
