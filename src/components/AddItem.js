@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { atualizarLista, addItemLista, atualizarItemLista, removerItemLista, removerLista } from "../features/estoqueSlice";
 import { View, Button, TextInput, Text } from "react-native";
 
-function AddItem() {
+function AddItem({ route }) {
+    const { name } = route.params;
     const [listaNome, setListaNome] = useState('');
     const [itemNome, setItemNome] = useState('');
     const [listaData, setListaData] = useState('');
@@ -19,6 +20,7 @@ function AddItem() {
 
     return (
         <View>
+             <Text>{name}</Text>
             <TextInput
                 placeholder="Nome da lista"
                 value={listaNome}
