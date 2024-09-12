@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { atualizarLista, addItemLista, atualizarItemLista, removerItemLista, removerLista } from "../features/estoqueSlice";
 import { View, Button, TextInput, Text } from "react-native";
 
 function AddItem({ route }) {
-    const { name } = route.params;
+    const listaId = route.params?.listaId;
     const [listaNome, setListaNome] = useState('');
     const [itemNome, setItemNome] = useState('');
     const [listaData, setListaData] = useState('');
@@ -12,15 +12,33 @@ function AddItem({ route }) {
     const [codigoBarras, setcodigoBarras] = useState('');
     const [dataValidade, setdataValidade] = useState('');
     const [qtdEmbalagem, setqtdEmbalagem] = useState('');
+    const [listaStatus, setListaStatus] = useState('');
     const [qtdTotal, setqtdTotal] = useState('');
     const [editId, setEditId] = useState(null);
     const [itemEditId, setItemEditId] = useState(null);
     const listas = useSelector(state => state.estoque.listas);
     const dispatch = useDispatch();
 
+    const lista = listaId ? listas.find(lista => lista.id === listaId) : null;
+
+    useEffect(() => {
+        if (lista) {
+            setListaNome(lista.name);
+            setListaData(lista.data);
+            setListaUnidade(lista.unidade);
+            setListaStatus(lista.status);
+        } else {
+            setListaNome('');
+            setListaData('');
+            setListaUnidade('');
+            setListaStatus('');
+        }
+    }, [lista]);
+
+    
+
     return (
         <View>
-             <Text>{name}</Text>
             <TextInput
                 placeholder="Nome da lista"
                 value={listaNome}
@@ -36,8 +54,13 @@ function AddItem({ route }) {
                 value={listaUnidade}
                 onChangeText={setListaUnidade}
             />
+            <TextInput
+                placeholder="Status"
+                value={listaStatus}
+                onChangeText={setListaStatus}
+            />
             <Button
-                title= "Atualizar lista"
+                title="Atualizar lista"
                 onPress={() => {
                     if (listaNome.trim() && listaData.trim() && listaUnidade.trim()) {
                         if (editId) {
@@ -46,12 +69,14 @@ function AddItem({ route }) {
                                 name: listaNome,
                                 data: listaData,
                                 unidade: listaUnidade,
+                                status: listaStatus,
                             }));
                             setEditId(null);
                         }
                         setListaNome('');
                         setListaData('');
                         setListaUnidade('');
+                        setListaStatus('');
 
                     }
                 }}
@@ -61,6 +86,7 @@ function AddItem({ route }) {
                     <Text>Nome: {lista.name}</Text>
                     <Text>Data: {lista.data}</Text>
                     <Text>Unidade: {lista.unidade}</Text>
+                    <Text>Status: {lista.status}</Text>
 
                     <TextInput
                         placeholder="Nome do item"
@@ -164,7 +190,7 @@ function AddItem({ route }) {
                             />
                         </View>
                     ))}
-                                        
+
                     <Button
                         title="Editar Lista"
                         onPress={() => {
@@ -172,9 +198,10 @@ function AddItem({ route }) {
                             setListaNome(lista.name);
                             setListaData(lista.data);
                             setListaUnidade(lista.unidade);
+                            setListaStatus(lista.status);
                         }}
                     />
-                    
+
 
                     <Button
                         title="Remover Lista"
@@ -184,6 +211,7 @@ function AddItem({ route }) {
             ))}
         </View>
     );
+
 }
 
 export default AddItem;

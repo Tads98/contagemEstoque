@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function AddDashboard({ navigation }) {
     const listas = useSelector(state => state.estoque.listas);
+    // const listaPendente = listas.filter(lista => lista.status === 'pendente');
+    // const listafinalizada = listas.filter(lista => lista.status === 'finalizado');
     const dispatch = useDispatch();
 
     const salvarListasNoStorage = async (listas) => {
@@ -17,7 +19,6 @@ function AddDashboard({ navigation }) {
             console.error('Erro ao salvar listas', error);
         }
     };
-
 
     const carregarListasDoStorage = async () => {
         try {
@@ -31,7 +32,6 @@ function AddDashboard({ navigation }) {
             return [];
         }
     };
-
 
     const testAsyncStorage = async () => {
         await AsyncStorage.setItem('@teste', 'Testando');
@@ -64,12 +64,17 @@ function AddDashboard({ navigation }) {
         <View>
             <Text>Lista Pendentes e Enviadas</Text>
             {listas.map(lista => (
-                <TouchableOpacity
-                    key={lista.id}
-                    onPress={() => navigation.navigate('AddItem', { name: lista.name })}
-                >
-                    <Text>{lista.name}</Text>
-                </TouchableOpacity>
+                <View key={lista.id}>
+                    {lista.status === 'pendente' ? (
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('AddItem', { listaId: lista.id, name: lista.name, status: lista.status })}
+                        >
+                            <Text>{lista.name}</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <Text>{lista.name}</Text>
+                    ) }
+                </View>
             ))}
             <Button
                 title="Criação de Nova Lista"

@@ -7,6 +7,7 @@ function AddLista({ navigation }) {
     const [listaNome, setListaNome] = useState('');
     const [listaData, setListaData] = useState('');
     const [listaUnidade, setListaUnidade] = useState('');
+    const [listaStatus, setListaStatus] = useState('');
     const listas = useSelector(state => state.estoque.listas);
     const dispatch = useDispatch();
 
@@ -27,21 +28,28 @@ function AddLista({ navigation }) {
                 value={listaUnidade}
                 onChangeText={setListaUnidade}
             />
+             <TextInput
+                placeholder="Status"
+                value={listaStatus}
+                onChangeText={setListaStatus}
+            />
             <Button
                 title="Adicionar Lista"
                 onPress={() => {
-                    if (listaNome.trim() && listaData.trim() && listaUnidade.trim()) {
+                    if (listaNome.trim() && listaData.trim() && listaUnidade.trim() && listaStatus.trim()) {
                         dispatch(addLista({
                             id: Date.now(),
                             name: listaNome,
                             data: listaData,
                             unidade: listaUnidade,
+                            status: listaStatus,
                         }));
                     }
                     navigation.navigate('AddItem');
                     setListaNome('');
                     setListaData('');
                     setListaUnidade('');
+                    setListaStatus('');
 
                 }
                 }
