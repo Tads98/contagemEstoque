@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addLista } from "../features/estoqueSlice";
-import { View, Button, TextInput } from "react-native";
+import { View, Button, TextInput, Text } from "react-native";
+import { Picker } from '@react-native-picker/picker';
 
 function AddLista({ navigation }) {
     const [listaNome, setListaNome] = useState('');
@@ -16,23 +17,54 @@ function AddLista({ navigation }) {
             <TextInput
                 placeholder="Nome da lista"
                 value={listaNome}
-                onChangeText={setListaNome}
+                onChangeText={(text) => {
+                    if (text.length <= 20) {
+                        setListaNome(text);
+                    }
+                }}
             />
             <TextInput
                 placeholder="Data (DD/MM/AA)"
                 value={listaData}
-                onChangeText={setListaData}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                    const apenasNum = text.replace(/\D/g, '');
+
+                    let validarData = apenasNum;
+
+                    if (apenasNum.length > 2) {
+                        validarData = `${apenasNum.slice(0, 2)}/${apenasNum.slice(2)}`
+                    }
+
+                    if (apenasNum.length > 5) {
+                        validarData = `${apenasNum.slice(0, 2)}/${apenasNum.slice(2, 4)}/${apenasNum.slice(4, 6)}`
+                    }
+
+                    setListaData(validarData);
+                }}
             />
             <TextInput
                 placeholder="Unidade"
                 value={listaUnidade}
-                onChangeText={setListaUnidade}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                    if (text.length <= 20) {
+                        setListaUnidade(text);
+                    }
+                }}
             />
-             <TextInput
-                placeholder="Status"
-                value={listaStatus}
-                onChangeText={setListaStatus}
-            />
+
+            <Text>Status</Text>
+            <Picker
+                selectedValue={listaStatus}
+                onValueChange={(itemValue) => setListaStatus(itemValue)}
+                style={{ height: 50, width: '100%' }}
+            >
+                <Picker.Item label="Selecione um status" value="" />
+                <Picker.Item label="Pendente" value="pendente" />
+                <Picker.Item label="Finalizado" value="finalizado" />
+            </Picker>
+
             <Button
                 title="Adicionar Lista"
                 onPress={() => {
@@ -44,16 +76,17 @@ function AddLista({ navigation }) {
                             unidade: listaUnidade,
                             status: listaStatus,
                         }));
+                        navigation.navigate('AddItem');
+                        setListaNome('');
+                        setListaData('');
+                        setListaUnidade('');
+                        setListaStatus('');
+                    } else {
+                        return;
                     }
-                    navigation.navigate('AddItem');
-                    setListaNome('');
-                    setListaData('');
-                    setListaUnidade('');
-                    setListaStatus('');
-
-                }
-                }
+                }}
             />
+
         </View>
     );
 

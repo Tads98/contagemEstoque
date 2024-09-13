@@ -2,43 +2,17 @@ import React, { useEffect } from "react";
 import { Button, View, Text, TouchableOpacity } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { addLista } from "../features/estoqueSlice";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { salvarListasNoStorage, carregarListasDoStorage, testAsyncStorage } from "../localStorage";
 
 function AddDashboard({ navigation }) {
     const listas = useSelector(state => state.estoque.listas);
     // const listaPendente = listas.filter(lista => lista.status === 'pendente');
     // const listafinalizada = listas.filter(lista => lista.status === 'finalizado');
     const dispatch = useDispatch();
-
-    const salvarListasNoStorage = async (listas) => {
-        try {
-            console.log('Salvando listas no armazenamento:', listas);
-            await AsyncStorage.setItem('@listas', JSON.stringify(listas));
-            console.log('Listas salvas com sucesso.');
-        } catch (error) {
-            console.error('Erro ao salvar listas', error);
-        }
-    };
-
-    const carregarListasDoStorage = async () => {
-        try {
-            const listasString = await AsyncStorage.getItem('@listas');
-            console.log('Listas carregadas do armazenamento bruto:', listasString);
-            const listas = listasString ? JSON.parse(listasString) : [];
-            console.log('Listas convertidas do armazenamento:', listas);
-            return listas;
-        } catch (error) {
-            console.error('Erro ao carregar listas:', error);
-            return [];
-        }
-    };
-
-    const testAsyncStorage = async () => {
-        await AsyncStorage.setItem('@teste', 'Testando');
-        const result = await AsyncStorage.getItem('@teste');
-        console.log('Valor armazenado:', result);
-    };
-    testAsyncStorage();
+    
+    useEffect(() => {
+        testAsyncStorage();
+    }, []); 
 
     useEffect(() => {
         if (listas.length > 0) {
