@@ -15,6 +15,8 @@ function AddItem({ route }) {
     const [listaStatus, setListaStatus] = useState('');
     const [qtdTotal, setqtdTotal] = useState('');
     const [editId, setEditId] = useState(null);
+    const [editarLista, setEditarLista] = useState(false);
+    const [editarItem, setEditarItem] = useState(false);
     const [itemEditId, setItemEditId] = useState(null);
     const listas = useSelector(state => state.estoque.listas);
     const dispatch = useDispatch();
@@ -39,140 +41,174 @@ function AddItem({ route }) {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Nome da lista"
-                value={listaNome}
-                onChangeText={setListaNome}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Data (DD/MM/AA)"
-                value={listaData}
-                onChangeText={setListaData}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Unidade"
-                value={listaUnidade}
-                onChangeText={setListaUnidade}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Status"
-                value={listaStatus}
-                onChangeText={setListaStatus}
-            />
-            <Button
-                title="Atualizar lista"
-                onPress={() => {
-                    if (listaNome.trim() && listaData.trim() && listaUnidade.trim()) {
-                        if (editId) {
-                            dispatch(atualizarLista({
-                                id: editId,
-                                name: listaNome,
-                                data: listaData,
-                                unidade: listaUnidade,
-                                status: listaStatus,
-                            }));
-                            setEditId(null);
-                        }
-                        setListaNome('');
-                        setListaData('');
-                        setListaUnidade('');
-                        setListaStatus('');
+            {editarLista && (
+                <>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Nome da lista"
+                        value={listaNome}
+                        onChangeText={setListaNome}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Data (DD/MM/AA)"
+                        value={listaData}
+                        onChangeText={setListaData}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Unidade"
+                        value={listaUnidade}
+                        onChangeText={setListaUnidade}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Status"
+                        value={listaStatus}
+                        onChangeText={setListaStatus}
+                    />
 
+                    <Button
+                        title="Atualizar lista"
+                        onPress={() => {
+                            if (listaNome.trim() && listaData.trim() && listaUnidade.trim()) {
+                                if (editId) {
+                                    dispatch(atualizarLista({
+                                        id: editId,
+                                        name: listaNome,
+                                        data: listaData,
+                                        unidade: listaUnidade,
+                                        status: listaStatus,
+                                    }));
+                                    setEditId(null);
+                                }
+                                setListaNome('');
+                                setListaData('');
+                                setListaUnidade('');
+                                setListaStatus('');
+                                setEditarLista(false);
+                            }
+                        }}
+                        style={styles.button}
+                    />
+                </>
+            )}
+
+            <Button
+                title={editarLista ? "Cancelar Edição" : "Editar Lista"}
+                onPress={() => {
+                    setEditarLista(!editarLista);
+                    if (!editarLista && lista) {
+                        setEditId(lista.id);
+                        setListaNome(lista.name);
+                        setListaData(lista.data);
+                        setListaUnidade(lista.unidade);
+                        setListaStatus(lista.status);
                     }
                 }}
                 style={styles.button}
             />
+
             {listas.map(lista => (
                 <View key={lista.id} style={styles.section}>
                     <Text style={styles.input}>Nome: {lista.name}</Text>
                     <Text style={styles.input}>Data: {lista.data}</Text>
                     <Text style={styles.input}>Unidade: {lista.unidade}</Text>
                     <Text style={styles.input}>Status: {lista.status}</Text>
+                    {editarItem && (
+                        <>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Nome do item"
+                                value={itemNome}
+                                onChangeText={setItemNome}
+                            />
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Nome do item"
-                        value={itemNome}
-                        onChangeText={setItemNome}
-                    />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Código de barras"
+                                value={codigoBarras}
+                                keyboardType="numeric"
+                                onChangeText={(text) => {
+                                    const numericCode = text.replace(/[^0-9]/g, '');
+                                    setcodigoBarras(numericCode);
+                                }}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Data de Validade"
+                                value={dataValidade}
+                                onChangeText={setdataValidade}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Unidade por Embalagem"
+                                value={qtdEmbalagem}
+                                keyboardType="numeric"
+                                onChangeText={(text) => {
+                                    const validarQtd = text.replace(/[^0-9]/g, '');
+                                    setqtdEmbalagem(validarQtd);
+                                }}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Quantidade Total"
+                                value={qtdTotal}
+                                keyboardType="numeric"
+                                onChangeText={(text) => {
+                                    const validarQtdTotal = text.replace(/[^0-9]/g, '');
+                                    setqtdTotal(validarQtdTotal);
+                                }}
+                            />
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Código de barras"
-                        value={codigoBarras}
-                        keyboardType="numeric"
-                        onChangeText={(text) => {
-                            const numericCode = text.replace(/[^0-9]/g, '');
-                            setcodigoBarras(numericCode);
-                        }}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Data de Validade"
-                        value={dataValidade}
-                        onChangeText={setdataValidade}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Unidade por Embalagem"
-                        value={qtdEmbalagem}
-                        keyboardType="numeric"
-                        onChangeText={(text) => {
-                            const validarQtd = text.replace(/[^0-9]/g, '');
-                            setqtdEmbalagem(validarQtd);
-                        }}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Quantidade Total"
-                        value={qtdTotal}
-                        keyboardType="numeric"
-                        onChangeText={(text) => {
-                            const validarQtdTotal = text.replace(/[^0-9]/g, '');
-                            setqtdTotal(validarQtdTotal);
-                        }}
-                    />
-                    <Button
-                        title={itemEditId ? "Atualizar Item" : "Adicionar Item"}
-                        onPress={() => {
-                            if (itemNome.trim() && codigoBarras.trim() && dataValidade.trim() && qtdEmbalagem.trim() && qtdTotal.trim()) {
-                                if (itemEditId) {
-                                    dispatch(atualizarItemLista({
-                                        listaId: lista.id,
-                                        itemId: itemEditId,
-                                        atualizarItem: {
-                                            name: itemNome,
-                                            codigoBarras: codigoBarras,
-                                            dataValidade: dataValidade,
-                                            qtdEmbalagem: parseInt(qtdEmbalagem),
-                                            qtdTotal: parseInt(qtdTotal)
+                            <Button
+                                title={itemEditId ? "Atualizar Item" : "Adicionar Item"}
+                                onPress={() => {
+                                    if (itemNome.trim() && codigoBarras.trim() && dataValidade.trim() && qtdEmbalagem.trim() && qtdTotal.trim()) {
+                                        if (itemEditId) {
+                                            dispatch(atualizarItemLista({
+                                                listaId: lista.id,
+                                                itemId: itemEditId,
+                                                atualizarItem: {
+                                                    name: itemNome,
+                                                    codigoBarras: codigoBarras,
+                                                    dataValidade: dataValidade,
+                                                    qtdEmbalagem: parseInt(qtdEmbalagem),
+                                                    qtdTotal: parseInt(qtdTotal)
+                                                }
+                                            }));
+                                            setItemEditId(null);
+                                        } else {
+                                            dispatch(addItemLista({
+                                                listaId: lista.id,
+                                                item: {
+                                                    id: Date.now(),
+                                                    name: itemNome,
+                                                    codigoBarras: codigoBarras,
+                                                    dataValidade: dataValidade,
+                                                    qtdEmbalagem: parseInt(qtdEmbalagem),
+                                                    qtdTotal: parseInt(qtdTotal)
+                                                }
+                                            }));
                                         }
-                                    }));
-                                    setItemEditId(null);
-                                } else {
-                                    dispatch(addItemLista({
-                                        listaId: lista.id,
-                                        item: {
-                                            id: Date.now(),
-                                            name: itemNome,
-                                            codigoBarras: codigoBarras,
-                                            dataValidade: dataValidade,
-                                            qtdEmbalagem: parseInt(qtdEmbalagem),
-                                            qtdTotal: parseInt(qtdTotal)
-                                        }
-                                    }));
-                                }
 
-                                setItemNome('');
-                                setcodigoBarras('');
-                                setdataValidade('');
-                                setqtdEmbalagem('');
-                                setqtdTotal('');
-                            }
+                                        setItemNome('');
+                                        setcodigoBarras('');
+                                        setdataValidade('');
+                                        setqtdEmbalagem('');
+                                        setqtdTotal('');
+                                        setEditarItem(false);
+                                    }
+                                }}
+                                style={styles.button}
+                            />
+                        </>
+                    )}
+
+                    <Button 
+                        title={editarItem ? "Cacelar Adição" : "Adicionar Item"}
+                        onPress={() =>{
+                            setEditarItem(!editarItem);
                         }}
                         style={styles.button}
                     />
@@ -205,19 +241,6 @@ function AddItem({ route }) {
                     ))}
 
                     <Button
-                        title="Editar Lista"
-                        onPress={() => {
-                            setEditId(lista.id);
-                            setListaNome(lista.name);
-                            setListaData(lista.data);
-                            setListaUnidade(lista.unidade);
-                            setListaStatus(lista.status);
-                        }}
-                        style={styles.button}
-                    />
-
-
-                    <Button
                         title="Remover Lista"
                         onPress={() => dispatch(removerLista(lista.id))}
                         style={styles.button}
@@ -240,17 +263,17 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 5,
-        marginBottom: 20, // Ajuste para espaçamento adequado entre inputs
+        marginBottom: 20, 
         marginTop: 20,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
     },
     button: {
         marginTop: 15,
-        marginBottom: 20, // Adiciona espaçamento entre os botões
+        marginBottom: 20, 
     },
     section: {
-        marginBottom: 40, // Adiciona espaçamento entre seções de listas e itens
+        marginBottom: 40,
     },
 });
 
