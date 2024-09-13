@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { atualizarLista, addItemLista, atualizarItemLista, removerItemLista, removerLista } from "../features/estoqueSlice";
-import { View, Button, TextInput, Text } from "react-native";
+import { View, Button, TextInput, Text, StyleSheet, ScrollView } from "react-native";
 
 function AddItem({ route }) {
     const listaId = route.params?.listaId;
@@ -35,26 +35,30 @@ function AddItem({ route }) {
         }
     }, [lista]);
 
-    
+
 
     return (
-        <View>
+        <ScrollView contentContainerStyle={styles.container}>
             <TextInput
+                style={styles.input}
                 placeholder="Nome da lista"
                 value={listaNome}
                 onChangeText={setListaNome}
             />
             <TextInput
+                style={styles.input}
                 placeholder="Data (DD/MM/AA)"
                 value={listaData}
                 onChangeText={setListaData}
             />
             <TextInput
+                style={styles.input}
                 placeholder="Unidade"
                 value={listaUnidade}
                 onChangeText={setListaUnidade}
             />
             <TextInput
+                style={styles.input}
                 placeholder="Status"
                 value={listaStatus}
                 onChangeText={setListaStatus}
@@ -80,21 +84,24 @@ function AddItem({ route }) {
 
                     }
                 }}
+                style={styles.button}
             />
             {listas.map(lista => (
-                <View key={lista.id}>
-                    <Text>Nome: {lista.name}</Text>
-                    <Text>Data: {lista.data}</Text>
-                    <Text>Unidade: {lista.unidade}</Text>
-                    <Text>Status: {lista.status}</Text>
+                <View key={lista.id} style={styles.section}>
+                    <Text style={styles.input}>Nome: {lista.name}</Text>
+                    <Text style={styles.input}>Data: {lista.data}</Text>
+                    <Text style={styles.input}>Unidade: {lista.unidade}</Text>
+                    <Text style={styles.input}>Status: {lista.status}</Text>
 
                     <TextInput
+                        style={styles.input}
                         placeholder="Nome do item"
                         value={itemNome}
                         onChangeText={setItemNome}
                     />
 
                     <TextInput
+                        style={styles.input}
                         placeholder="Código de barras"
                         value={codigoBarras}
                         keyboardType="numeric"
@@ -104,11 +111,13 @@ function AddItem({ route }) {
                         }}
                     />
                     <TextInput
+                        style={styles.input}
                         placeholder="Data de Validade"
                         value={dataValidade}
                         onChangeText={setdataValidade}
                     />
                     <TextInput
+                        style={styles.input}
                         placeholder="Unidade por Embalagem"
                         value={qtdEmbalagem}
                         keyboardType="numeric"
@@ -118,6 +127,7 @@ function AddItem({ route }) {
                         }}
                     />
                     <TextInput
+                        style={styles.input}
                         placeholder="Quantidade Total"
                         value={qtdTotal}
                         keyboardType="numeric"
@@ -164,15 +174,16 @@ function AddItem({ route }) {
                                 setqtdTotal('');
                             }
                         }}
+                        style={styles.button}
                     />
 
                     {lista.itens && lista.itens.map(item => (
-                        <View key={item.id}>
-                            <Text>Item: {item.name}</Text>
-                            <Text>Código de Barras: {item.codigoBarras}</Text>
-                            <Text>Data de Validade: {item.dataValidade}</Text>
-                            <Text>Quantidade Embalagem: {item.qtdEmbalagem}</Text>
-                            <Text>Quantidade Total: {item.qtdTotal}</Text>
+                        <View key={item.id} style={styles.section}>
+                            <Text style={styles.input}>Item: {item.name}</Text>
+                            <Text style={styles.input}>Código de Barras: {item.codigoBarras}</Text>
+                            <Text style={styles.input}>Data de Validade: {item.dataValidade}</Text>
+                            <Text style={styles.input}>Quantidade Embalagem: {item.qtdEmbalagem}</Text>
+                            <Text style={styles.input}>Quantidade Total: {item.qtdTotal}</Text>
                             <Button
                                 title="Editar Item"
                                 onPress={() => {
@@ -183,10 +194,12 @@ function AddItem({ route }) {
                                     setqtdEmbalagem(item.qtdEmbalagem.toString());
                                     setqtdTotal(item.qtdTotal.toString());
                                 }}
+                                style={styles.button}
                             />
                             <Button
                                 title="Remover Item"
                                 onPress={() => dispatch(removerItemLista({ listaId: lista.id, itemId: item.id }))}
+                                style={styles.button}
                             />
                         </View>
                     ))}
@@ -200,18 +213,46 @@ function AddItem({ route }) {
                             setListaUnidade(lista.unidade);
                             setListaStatus(lista.status);
                         }}
+                        style={styles.button}
                     />
 
 
                     <Button
                         title="Remover Lista"
                         onPress={() => dispatch(removerLista(lista.id))}
+                        style={styles.button}
                     />
                 </View>
             ))}
-        </View>
+        </ScrollView>
     );
 
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        padding: 20,
+        backgroundColor: '#f5f5f5',
+    },
+    input: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 20, // Ajuste para espaçamento adequado entre inputs
+        marginTop: 20,
+        paddingHorizontal: 10,
+        backgroundColor: '#fff',
+    },
+    button: {
+        marginTop: 15,
+        marginBottom: 20, // Adiciona espaçamento entre os botões
+    },
+    section: {
+        marginBottom: 40, // Adiciona espaçamento entre seções de listas e itens
+    },
+});
+
 
 export default AddItem;

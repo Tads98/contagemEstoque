@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addLista } from "../features/estoqueSlice";
-import { View, Button, TextInput, Text } from "react-native";
+import { View, Button, TextInput, Text, StyleSheet, ScrollView } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 
 function AddLista({ navigation }) {
@@ -13,8 +13,9 @@ function AddLista({ navigation }) {
     const dispatch = useDispatch();
 
     return (
-        <View>
+        <ScrollView contentContainerStyle={styles.container}>
             <TextInput
+                style={styles.input}
                 placeholder="Nome da lista"
                 value={listaNome}
                 onChangeText={(text) => {
@@ -24,26 +25,24 @@ function AddLista({ navigation }) {
                 }}
             />
             <TextInput
+                style={styles.input}
                 placeholder="Data (DD/MM/AA)"
                 value={listaData}
                 keyboardType="numeric"
                 onChangeText={(text) => {
                     const apenasNum = text.replace(/\D/g, '');
-
                     let validarData = apenasNum;
-
                     if (apenasNum.length > 2) {
                         validarData = `${apenasNum.slice(0, 2)}/${apenasNum.slice(2)}`
                     }
-
                     if (apenasNum.length > 5) {
                         validarData = `${apenasNum.slice(0, 2)}/${apenasNum.slice(2, 4)}/${apenasNum.slice(4, 6)}`
                     }
-
                     setListaData(validarData);
                 }}
             />
             <TextInput
+                style={styles.input}
                 placeholder="Unidade"
                 value={listaUnidade}
                 keyboardType="numeric"
@@ -53,18 +52,16 @@ function AddLista({ navigation }) {
                     }
                 }}
             />
-
-            <Text>Status</Text>
+            <Text style={styles.label}>Status</Text>
             <Picker
                 selectedValue={listaStatus}
                 onValueChange={(itemValue) => setListaStatus(itemValue)}
-                style={{ height: 50, width: '100%' }}
+                style={styles.picker}
             >
                 <Picker.Item label="Selecione um status" value="" />
                 <Picker.Item label="Pendente" value="pendente" />
                 <Picker.Item label="Finalizado" value="finalizado" />
             </Picker>
-
             <Button
                 title="Adicionar Lista"
                 onPress={() => {
@@ -81,15 +78,39 @@ function AddLista({ navigation }) {
                         setListaData('');
                         setListaUnidade('');
                         setListaStatus('');
-                    } else {
-                        return;
                     }
                 }}
             />
-
-        </View>
+        </ScrollView>
     );
 
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        padding: 20,
+        backgroundColor: '#f5f5f5',
+    },
+    input: {
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 15,
+        paddingHorizontal: 10,
+        backgroundColor: '#fff',
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    picker: {
+        height: 50,
+        width: '100%',
+        marginBottom: 15,
+    },
+});
 
 export default AddLista;
