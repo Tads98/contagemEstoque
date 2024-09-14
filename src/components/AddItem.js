@@ -95,7 +95,7 @@ function AddItem({ route }) {
             )}
 
             <Button
-                title={editarLista ? "Cancelar Edição" : "Editar Lista"}
+                title={editarLista ? "Cancelar" : "Editar Lista"}
                 onPress={() => {
                     setEditarLista(!editarLista);
                     if (!editarLista && lista) {
@@ -104,6 +104,12 @@ function AddItem({ route }) {
                         setListaData(lista.data);
                         setListaUnidade(lista.unidade);
                         setListaStatus(lista.status);
+                    } else {
+                        setEditId(null);
+                        setListaNome('');
+                        setListaData('');
+                        setListaUnidade('');
+                        setListaStatus('');
                     }
                 }}
                 style={styles.button}
@@ -206,7 +212,7 @@ function AddItem({ route }) {
                     )}
 
                     <Button 
-                        title={editarItem ? "Cacelar Adição" : "Adicionar Item"}
+                        title={editarItem ? "Cacelar" : "Adicionar Item"}
                         onPress={() =>{
                             setEditarItem(!editarItem);
                         }}
@@ -223,6 +229,7 @@ function AddItem({ route }) {
                             <Button
                                 title="Editar Item"
                                 onPress={() => {
+                                    setEditarItem(true); 
                                     setItemEditId(item.id);
                                     setItemNome(item.name);
                                     setcodigoBarras(item.codigoBarras);
