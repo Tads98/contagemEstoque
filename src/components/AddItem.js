@@ -43,6 +43,7 @@ function AddItem({ route }) {
         <ScrollView contentContainerStyle={styles.container}>
             {editarLista && lista &&(
                 <>
+                    <Text>EDITAR LISTA:</Text>
                     <TextInput
                         style={styles.input}
                         placeholder="Nome da lista"
@@ -123,6 +124,7 @@ function AddItem({ route }) {
                     <Text style={styles.input}>Status: {lista.status}</Text>
                     {opcaoItem && (
                         <>
+                            <Text>ADICIONANDO/EDITANDO ITEM:</Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Nome do item"
