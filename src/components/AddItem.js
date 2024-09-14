@@ -16,7 +16,7 @@ function AddItem({ route }) {
     const [qtdTotal, setqtdTotal] = useState('');
     const [editId, setEditId] = useState(null);
     const [editarLista, setEditarLista] = useState(false);
-    const [editarItem, setEditarItem] = useState(false);
+    const [opcaoItem, setopcaoItem] = useState(false);
     const [itemEditId, setItemEditId] = useState(null);
     const listas = useSelector(state => state.estoque.listas);
     const dispatch = useDispatch();
@@ -41,7 +41,7 @@ function AddItem({ route }) {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            {editarLista && (
+            {editarLista && lista &&(
                 <>
                     <TextInput
                         style={styles.input}
@@ -71,7 +71,7 @@ function AddItem({ route }) {
                     <Button
                         title="Atualizar lista"
                         onPress={() => {
-                            if (listaNome.trim() && listaData.trim() && listaUnidade.trim()) {
+                            if (listaNome.trim() && listaData.trim() && listaUnidade.trim() && listaStatus.trim()) {
                                 if (editId) {
                                     dispatch(atualizarLista({
                                         id: editId,
@@ -121,7 +121,7 @@ function AddItem({ route }) {
                     <Text style={styles.input}>Data: {lista.data}</Text>
                     <Text style={styles.input}>Unidade: {lista.unidade}</Text>
                     <Text style={styles.input}>Status: {lista.status}</Text>
-                    {editarItem && (
+                    {opcaoItem && (
                         <>
                             <TextInput
                                 style={styles.input}
@@ -203,7 +203,7 @@ function AddItem({ route }) {
                                         setdataValidade('');
                                         setqtdEmbalagem('');
                                         setqtdTotal('');
-                                        setEditarItem(false);
+                                        setopcaoItem(false);
                                     }
                                 }}
                                 style={styles.button}
@@ -212,9 +212,9 @@ function AddItem({ route }) {
                     )}
 
                     <Button 
-                        title={editarItem ? "Cacelar" : "Adicionar Item"}
+                        title={opcaoItem ? "Cacelar" : "Adicionar Item"}
                         onPress={() =>{
-                            setEditarItem(!editarItem);
+                            setopcaoItem(!opcaoItem);
                         }}
                         style={styles.button}
                     />
@@ -229,7 +229,7 @@ function AddItem({ route }) {
                             <Button
                                 title="Editar Item"
                                 onPress={() => {
-                                    setEditarItem(true); 
+                                    setopcaoItem(true); 
                                     setItemEditId(item.id);
                                     setItemNome(item.name);
                                     setcodigoBarras(item.codigoBarras);
