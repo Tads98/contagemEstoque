@@ -122,7 +122,7 @@ function AddItem({ route }) {
                     <Text style={styles.input}>Data: {lista.data}</Text>
                     <Text style={styles.input}>Unidade: {lista.unidade}</Text>
                     <Text style={styles.input}>Status: {lista.status}</Text>
-                    {opcaoItem && (
+                    {opcaoItem === lista.id && (
                         <>
                             <Text>ADICIONANDO/EDITANDO ITEM:</Text>
                             <TextInput
@@ -214,12 +214,14 @@ function AddItem({ route }) {
                     )}
 
                     <Button 
-                        title={opcaoItem ? "Cacelar" : "Adicionar Item"}
+                        title={opcaoItem === lista.id ? "Cacelar" : "Adicionar Item"}
                         onPress={() =>{
-                            setopcaoItem(!opcaoItem);
+                            setopcaoItem(opcaoItem === lista.id ? null : lista.id);
                         }}
                         style={styles.button}
                     />
+
+                    
 
                     {lista.itens && lista.itens.map(item => (
                         <View key={item.id} style={styles.section}>
