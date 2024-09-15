@@ -41,7 +41,7 @@ function AddItem({ route }) {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            {editarLista && lista &&(
+            {editarLista && lista && (
                 <>
                     <Text>EDITAR LISTA:</Text>
                     <TextInput
@@ -213,15 +213,42 @@ function AddItem({ route }) {
                         </>
                     )}
 
-                    <Button 
-                        title={opcaoItem === lista.id ? "Cacelar" : "Adicionar Item"}
-                        onPress={() =>{
-                            setopcaoItem(opcaoItem === lista.id ? null : lista.id);
+                    <Button
+                        title={opcaoItem === lista.id ? "Cancelar" : "Adicionar Item"}
+                        onPress={() => {
+                            if (opcaoItem === lista.id) {
+                                setopcaoItem(null);
+                                setItemNome('');
+                                setcodigoBarras('');
+                                setdataValidade('');
+                                setqtdEmbalagem('');
+                                setqtdTotal('');
+                                setItemEditId(null);
+                            } else {
+                                setopcaoItem(lista.id);
+                                if (itemEditId) {
+                                    const item = lista.itens.find(item => item.id === itemEditId);
+                                    if (item) {
+                                        setItemNome(item.name);
+                                        setcodigoBarras(item.codigoBarras);
+                                        setdataValidade(item.dataValidade);
+                                        setqtdEmbalagem(item.qtdEmbalagem.toString());
+                                        setqtdTotal(item.qtdTotal.toString());
+                                    }
+                                } else {
+                                    setItemNome('');
+                                    setcodigoBarras('');
+                                    setdataValidade('');
+                                    setqtdEmbalagem('');
+                                    setqtdTotal('');
+                                }
+                            }
                         }}
                         style={styles.button}
                     />
 
-                    
+
+
 
                     {lista.itens && lista.itens.map(item => (
                         <View key={item.id} style={styles.section}>
@@ -233,7 +260,7 @@ function AddItem({ route }) {
                             <Button
                                 title="Editar Item"
                                 onPress={() => {
-                                    setopcaoItem(true); 
+                                    setopcaoItem(lista.id);
                                     setItemEditId(item.id);
                                     setItemNome(item.name);
                                     setcodigoBarras(item.codigoBarras);
@@ -274,14 +301,14 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 5,
-        marginBottom: 20, 
+        marginBottom: 20,
         marginTop: 20,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
     },
     button: {
         marginTop: 15,
-        marginBottom: 20, 
+        marginBottom: 20,
     },
     section: {
         marginBottom: 40,
