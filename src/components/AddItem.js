@@ -226,25 +226,11 @@ function AddItem({ route }) {
                                 setItemEditId(null);
                             } else {
                                 setopcaoItem(lista.id);
-                                if (itemEditId) {
-                                    const item = lista.itens.find(item => item.id === itemEditId);
-                                    if (item) {
-                                        setItemNome(item.name);
-                                        setcodigoBarras(item.codigoBarras);
-                                        setdataValidade(item.dataValidade);
-                                        setqtdEmbalagem(item.qtdEmbalagem.toString());
-                                        setqtdTotal(item.qtdTotal.toString());
-                                    }
-                                } else {
-                                    setItemNome('');
-                                    setcodigoBarras('');
-                                    setdataValidade('');
-                                    setqtdEmbalagem('');
-                                    setqtdTotal('');
-                                }
+                                
                             }
-                        }}
-                        style={styles.button}
+                        }
+                        }
+                    style={styles.button}
                     />
 
 
