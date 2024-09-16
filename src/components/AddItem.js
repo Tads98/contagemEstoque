@@ -44,7 +44,9 @@ function AddItem({ route }) {
         <ScrollView contentContainerStyle={styles.container}>
             {editarLista && lista && (
                 <>
-                    <Text>EDITAR LISTA:</Text>
+                    <Text style={styles.label}>
+                        <Text>EDITAR LISTA:</Text>
+                    </Text>
                     <TextInput
                         style={styles.input}
                         placeholder="Nome da lista"
@@ -55,7 +57,18 @@ function AddItem({ route }) {
                         style={styles.input}
                         placeholder="Data (DD/MM/AA)"
                         value={listaData}
-                        onChangeText={setListaData}
+                        keyboardType="numeric"
+                        onChangeText={(text) => {
+                            const apenasNum = text.replace(/\D/g, '');
+                            let validarData = apenasNum;
+                            if (apenasNum.length > 2) {
+                                validarData = `${apenasNum.slice(0, 2)}/${apenasNum.slice(2)}`
+                            }
+                            if (apenasNum.length > 5) {
+                                validarData = `${apenasNum.slice(0, 2)}/${apenasNum.slice(2, 4)}/${apenasNum.slice(4, 6)}`
+                            }
+                            setListaData(validarData);
+                        }}
                     />
                     <TextInput
                         style={styles.input}
@@ -123,13 +136,15 @@ function AddItem({ route }) {
 
             {listas.map(lista => (
                 <View key={lista.id} style={styles.section}>
-                    <Text style={styles.input}>Nome: {lista.name}</Text>
+                    <Text style={styles.input}>Nome Lista: {lista.name}</Text>
                     <Text style={styles.input}>Data: {lista.data}</Text>
                     <Text style={styles.input}>Unidade: {lista.unidade}</Text>
                     <Text style={styles.input}>Status: {lista.status}</Text>
                     {opcaoItem === lista.id && (
                         <>
-                            <Text>ADICIONANDO/EDITANDO ITEM:</Text>
+                            <Text style={styles.label}>
+                                <Text>ADICIONANDO/EDITANDO ITEM:</Text>
+                            </Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Nome do item"
@@ -147,12 +162,25 @@ function AddItem({ route }) {
                                     setcodigoBarras(numericCode);
                                 }}
                             />
+
                             <TextInput
                                 style={styles.input}
-                                placeholder="Data de Validade"
+                                placeholder="Data de Validade (DD/MM/AA)"
                                 value={dataValidade}
-                                onChangeText={setdataValidade}
+                                keyboardType="numeric"
+                                onChangeText={(text) => {
+                                    const apenasNum = text.replace(/\D/g, '');
+                                    let validarData = apenasNum;
+                                    if (apenasNum.length > 2) {
+                                        validarData = `${apenasNum.slice(0, 2)}/${apenasNum.slice(2)}`
+                                    }
+                                    if (apenasNum.length > 5) {
+                                        validarData = `${apenasNum.slice(0, 2)}/${apenasNum.slice(2, 4)}/${apenasNum.slice(4, 6)}`
+                                    }
+                                    setdataValidade(validarData);
+                                }}
                             />
+
                             <TextInput
                                 style={styles.input}
                                 placeholder="Unidade por Embalagem"
@@ -243,7 +271,7 @@ function AddItem({ route }) {
 
                     {lista.itens && lista.itens.map(item => (
                         <View key={item.id} style={styles.section}>
-                            <Text style={styles.input}>Item: {item.name}</Text>
+                            <Text style={styles.input}>Nome Item: {item.name}</Text>
                             <Text style={styles.input}>Código de Barras: {item.codigoBarras}</Text>
                             <Text style={styles.input}>Data de Validade: {item.dataValidade}</Text>
                             <Text style={styles.input}>Quantidade Embalagem: {item.qtdEmbalagem}</Text>
@@ -308,6 +336,14 @@ const styles = StyleSheet.create({
         height: 50,
         width: '100%',
         marginBottom: 15,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    bold: {
+        fontWeight: 'bold',
     },
 });
 

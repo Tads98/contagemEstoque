@@ -7,8 +7,6 @@ import { salvaListaUsuario, retornaListaUsuario } from "../utils/ServicoLista";
 
 function AddDashboard({ navigation }) {
     const listas = useSelector(state => state.estoque.listas);
-    // const listaPendente = listas.filter(lista => lista.status === 'pendente');
-    // const listafinalizada = listas.filter(lista => lista.status === 'finalizado');
     const dispatch = useDispatch();
 
     useEffect(() => {
