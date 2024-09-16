@@ -3,6 +3,7 @@ import { Button, View, Text, TouchableOpacity, StyleSheet, ScrollView } from "re
 import { useSelector, useDispatch } from "react-redux";
 import { addLista } from "../features/estoqueSlice";
 import { salvarListasNoStorage, carregarListasDoStorage, testAsyncStorage } from "../localStorage";
+import { salvaListaUsuario, retornaListaUsuario } from "../utils/ServicoLista";
 
 function AddDashboard({ navigation }) {
     const listas = useSelector(state => state.estoque.listas);
@@ -28,10 +29,30 @@ function AddDashboard({ navigation }) {
             if (listasStorage.length > 0) {
                 listasStorage.forEach(lista => dispatch(addLista(lista)));
             }
+
+            const listasUsuario = await retornaListaUsuario();
+            listasUsuario.forEach(lista => dispatch(addLista(lista)));
         };
         fetchListas();
     }, [dispatch]);
 
+    const mockApiSync = (listas) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                console.log("listas sincronizadas: ", listas);
+                resolve({ status: 'sucesso', data: listas});
+            }, 1000);
+        });
+    };
+
+    const syncListas = async () => {
+        const listasUsuario = await retornaListaUsuario();
+        const response = await mockApiSync(listasUsuario);
+        if (response.status === 'sucesso') {
+            alert('Sincronização concluida');
+            await salvaListaUsuario(response.data);
+        }
+    };
 
     return (
 
@@ -62,6 +83,8 @@ function AddDashboard({ navigation }) {
                     navigation.navigate('AddLista');
                 }}
             />
+
+            <Button title="Sincronizar Listas" onPress={syncListas}/>
         </ScrollView>
     )
 }

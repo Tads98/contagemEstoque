@@ -24,7 +24,11 @@ export const carregarListasDoStorage = async () => {
 };
 
 export const testAsyncStorage = async () => {
-    await AsyncStorage.setItem('@teste', 'Testando');
-    const result = await AsyncStorage.getItem('@teste');
-    console.log('Valor armazenado:', result);
+    try {
+        const keys = await AsyncStorage.getAllKeys();  
+        const items = await AsyncStorage.multiGet(keys);  
+        console.log('Itens armazenados no AsyncStorage:', items);  
+    } catch (error) {
+        console.error('Erro ao listar AsyncStorage:', error);
+    }
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { atualizarLista, addItemLista, atualizarItemLista, removerItemLista, removerLista } from "../features/estoqueSlice";
 import { View, Button, TextInput, Text, StyleSheet, ScrollView } from "react-native";
+import { Picker } from '@react-native-picker/picker';
 
 function AddItem({ route }) {
     const listaId = route.params?.listaId;
@@ -62,12 +63,16 @@ function AddItem({ route }) {
                         value={listaUnidade}
                         onChangeText={setListaUnidade}
                     />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Status"
-                        value={listaStatus}
-                        onChangeText={setListaStatus}
-                    />
+                    <Text style={styles.label}>Status</Text>
+                    <Picker
+                        selectedValue={listaStatus}
+                        onValueChange={(itemValue) => setListaStatus(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="Selecione um status" value="" />
+                        <Picker.Item label="Pendente" value="pendente" />
+                        <Picker.Item label="Finalizado" value="finalizado" />
+                    </Picker>
 
                     <Button
                         title="Atualizar lista"
@@ -226,11 +231,11 @@ function AddItem({ route }) {
                                 setItemEditId(null);
                             } else {
                                 setopcaoItem(lista.id);
-                                
+
                             }
                         }
                         }
-                    style={styles.button}
+                        style={styles.button}
                     />
 
 
@@ -298,6 +303,11 @@ const styles = StyleSheet.create({
     },
     section: {
         marginBottom: 40,
+    },
+    picker: {
+        height: 50,
+        width: '100%',
+        marginBottom: 15,
     },
 });
 
