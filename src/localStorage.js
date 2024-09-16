@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const salvarListasNoStorage = async (listas) => {
     try {
-        console.log('Salvando listas no armazenamento:', listas);
+        console.log('Salvando listas:', listas);
         await AsyncStorage.setItem('@listas', JSON.stringify(listas));
         console.log('Listas salvas com sucesso.');
     } catch (error) {
@@ -13,9 +13,9 @@ export const salvarListasNoStorage = async (listas) => {
 export const carregarListasDoStorage = async () => {
     try {
         const listasString = await AsyncStorage.getItem('@listas');
-        console.log('Listas carregadas do armazenamento bruto:', listasString);
+        console.log('Listas carregadas:', listasString);
         const listas = listasString ? JSON.parse(listasString) : [];
-        console.log('Listas convertidas do armazenamento:', listas);
+        console.log('Listas convertidas:', listas);
         return listas;
     } catch (error) {
         console.error('Erro ao carregar listas:', error);
